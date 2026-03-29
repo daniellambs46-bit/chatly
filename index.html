@@ -1326,6 +1326,7 @@ function chatScrollB(){ const m=document.getElementById('chatMessages'); m.scrol
 function chatSuggest(text){ document.getElementById('chatInput').value=text; chatSend(); }
 
 function chatNewChat(){
+   <script src="https://js.puter.com/v2/"></script>
   chatMessages=[];
   document.getElementById('chatMessages').innerHTML=`<div class="chat-welcome" id="chatWelcome">
     <div class="chat-welcome-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
@@ -1415,8 +1416,7 @@ async function chatSend(){
 }
 
 document.getElementById('topic').addEventListener('keydown',e=>{ if(e.key==='Enter') handleGenerate(); });
-  <script src="https://js.puter.com/v2/"></script>
-    
+  
 </script>
 </body>
 </html>
