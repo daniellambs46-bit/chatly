@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Chatly – Generate Content in Seconds</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#fdf8f2;--cream2:#f5ede0;--surface:#fff;
+  --coral:#e05c2a;--coral-d:#b84318;--coral-s:#fdf0ea;--coral-m:#f47c50;
+  --ink:#1c1410;--ink2:#6b5d52;--ink3:#a8998e;
+  --teal:#1a7a64;--teal-s:#e1f5ee;
+  --border:rgba(28,20,16,.09);--border2:rgba(28,20,16,.16);
+  --r:16px;--rs:10px;
+  --sh:0 2px 18px rgba(28,20,16,.07);--sh2:0 8px 48px rgba(28,20,16,.13);
+  --f:'DM Sans',sans-serif;--fd:'Playfair Display',serif;
+  --sidebar:220px;--topbar:58px;
+}
+body{font-family:var(--f);background:var(--cream);color:var(--ink);font-size:15px;line-height:1.65;min-height:100vh;overflow-x:hidden}
+
+/* ── VIEWS ── */
+.view{display:none}.view.active{display:block}
+#workspace{display:none;height:100vh;overflow:hidden;flex-direction:column}
+#workspace.active{display:flex}
+
+/* ══════════════ SHARED NAV ══════════════ */
+nav{position:sticky;top:0;z-index:400;height:64px;display:flex;align-items:center;padding:0 2.5rem;background:rgba(253,248,242,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-in{max-width:1200px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:9px;cursor:pointer;font-family:var(--fd);font-weight:700;font-size:1.25rem;color:var(--ink);text-decoration:none}
+.logo-icon{width:36px;height:36px;background:var(--coral);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 12px rgba(224,92,42,.3)}
+.logo em{font-style:italic;color:var(--coral)}
+.nav-links{display:flex;gap:1.75rem;list-style:none}
+.nav-links a{font-size:.84rem;font-weight:500;color:var(--ink2);text-decoration:none;cursor:pointer;transition:color .18s}
+.nav-links a:hover{color:var(--coral)}
+.nav-r{display:flex;align-items:center;gap:8px}
+.btn-ghost{background:transparent;border:1.5px solid var(--border2);color:var(--ink);font-family:var(--f);font-weight:600;font-size:.82rem;padding:.44rem 1.05rem;border-radius:100px;cursor:pointer;transition:all .18s}
+.btn-ghost:hover{border-color:var(--coral);color:var(--coral)}
+.btn-coral{background:var(--coral);color:#fff;font-family:var(--f);font-weight:700;font-size:.82rem;padding:.5rem 1.2rem;border-radius:100px;border:none;cursor:pointer;transition:all .18s;box-shadow:0 3px 12px rgba(224,92,42,.3)}
+.btn-coral:hover{background:var(--coral-d);transform:translateY(-1px)}
+.user-pill{display:flex;align-items:center;gap:7px;background:var(--cream2);border:1px solid var(--border);border-radius:100px;padding:.3rem .85rem .3rem .42rem;font-size:.79rem;font-weight:600}
+.u-av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--coral),#f59e0b);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:800;color:#fff}
+.btn-lo{background:transparent;border:none;color:var(--ink3);font-size:.74rem;cursor:pointer;font-family:var(--f);transition:color .18s}
+.btn-lo:hover{color:var(--coral)}
+
+/* ══════════════ LANDING ══════════════ */
+/* HERO */
+.hero{padding:5.5rem 2.5rem 5rem;background:var(--surface);border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-120px;right:-100px;width:480px;height:480px;border-radius:50%;background:radial-gradient(circle,rgba(224,92,42,.07) 0%,transparent 70%);pointer-events:none}
+.hero-in{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--coral-s);color:var(--coral-d);font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.28rem .9rem;border-radius:100px;margin-bottom:1.4rem;border:1px solid rgba(224,92,42,.14)}
+.hero-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--coral);display:inline-block}
+h1{font-family:var(--fd);font-size:clamp(2rem,4vw,3.2rem);font-weight:900;line-height:1.07;margin-bottom:1.1rem}
+h1 em{font-style:italic;color:var(--coral)}
+.hero-sub{color:var(--ink2);font-size:.97rem;font-weight:300;margin-bottom:2rem;line-height:1.8;max-width:440px}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1.75rem}
+.btn-hero{background:var(--coral);color:#fff;font-family:var(--f);font-weight:700;font-size:.97rem;padding:.85rem 2rem;border-radius:100px;border:none;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(224,92,42,.34)}
+.btn-hero:hover{background:var(--coral-d);transform:translateY(-2px)}
+.btn-hero-o{background:transparent;color:var(--ink);font-family:var(--f);font-weight:600;font-size:.97rem;padding:.85rem 1.65rem;border-radius:100px;border:2px solid var(--border2);cursor:pointer;transition:all .2s}
+.btn-hero-o:hover{border-color:var(--coral);color:var(--coral);transform:translateY(-2px)}
+.trust{font-size:.74rem;color:var(--ink3);display:flex;align-items:center;gap:6px}
+.stars{color:#f59e0b;letter-spacing:2px}
+.hero-card{background:var(--cream);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh2)}
+.hc-top{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.15rem;background:var(--cream2);border-bottom:1px solid var(--border)}
+.hc-dots{display:flex;gap:5px}
+.hcd{width:9px;height:9px;border-radius:50%}
+.hcd-r{background:#f87171}.hcd-y{background:#fbbf24}.hcd-g{background:#4ade80}
+.hc-tag{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:var(--teal-s);color:var(--teal);padding:2px 8px;border-radius:4px}
+.hc-bar{height:3px;background:var(--cream2);overflow:hidden}
+.hc-prog{height:100%;width:70%;background:linear-gradient(90deg,var(--coral),var(--coral-m));animation:hpulse 2s ease-in-out infinite}
+@keyframes hpulse{0%,100%{opacity:1}50%{opacity:.38}}
+.hc-body{padding:1.2rem}
+.hc-text{font-size:.85rem;line-height:1.75;color:var(--ink2);margin-bottom:1rem}
+.hc-text strong{color:var(--ink)}
+.hc-acts{display:flex;gap:6px}
+.hca{flex:1;padding:.42rem;border-radius:var(--rs);border:1px solid var(--border2);background:transparent;font-size:.74rem;font-weight:600;cursor:pointer;font-family:var(--f);transition:all .15s;color:var(--ink2)}
+.hca:hover{background:var(--cream2)}
+.hca.p{background:var(--coral);color:#fff;border-color:var(--coral)}
+.hca.p:hover{background:var(--coral-d)}
+.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:1rem}
+.stat-pill{background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);padding:.8rem 1rem;box-shadow:var(--sh)}
+.stat-num{font-family:var(--fd);font-size:1.4rem;font-weight:900;color:var(--coral);line-height:1}
+.stat-lbl{font-size:.7rem;color:var(--ink3);margin-top:.18rem}
+
+/* SECTIONS */
+.sec{padding:4.5rem 2.5rem}
+.sec-in{max-width:1200px;margin:0 auto}
+.sec-cream{background:var(--cream)}.sec-white{background:var(--surface)}.sec-dark{background:var(--ink)}
+.sec-label{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);margin-bottom:.65rem;text-align:center}
+h2{font-family:var(--fd);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:900;line-height:1.12;margin-bottom:.85rem;text-align:center}
+.sec-sub{color:var(--ink2);font-size:.9rem;font-weight:300;max-width:460px;margin:0 auto 2.8rem;text-align:center;line-height:1.75}
+
+/* features */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.feat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.65rem 1.5rem;transition:transform .2s,box-shadow .2s;position:relative;overflow:hidden}
+.feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--coral),var(--coral-m));opacity:0;transition:opacity .2s}
+.feat-card:hover{transform:translateY(-4px);box-shadow:var(--sh2)}
+.feat-card:hover::before{opacity:1}
+.feat-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.1rem}
+.fi-c{background:var(--coral-s)}.fi-t{background:var(--teal-s)}.fi-w{background:#fef9ee}
+h3{font-family:var(--fd);font-weight:700;font-size:1rem;margin-bottom:.4rem}
+.feat-desc{font-size:.83rem;color:var(--ink2);font-weight:300;line-height:1.65}
+
+/* samples */
+.samples-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.sample-card{background:var(--cream);border:1px solid var(--border);border-radius:var(--r);padding:1.4rem;display:flex;flex-direction:column;gap:8px;transition:transform .2s,box-shadow .2s}
+.sample-card:hover{transform:translateY(-4px);box-shadow:var(--sh2)}
+.s-type{background:var(--coral-s);color:var(--coral-d);font-size:.67rem;font-weight:700;border-radius:100px;padding:2px 9px;width:fit-content;text-transform:uppercase;letter-spacing:.05em}
+.s-title{font-family:var(--fd);font-size:.9rem;font-weight:700;line-height:1.3}
+.s-excerpt{font-size:.82rem;color:var(--ink2);line-height:1.65;flex:1;white-space:pre-line}
+.s-acts{display:flex;gap:6px;padding-top:4px}
+
+/* pricing */
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.price-card{border-radius:var(--r);padding:1.85rem 1.65rem;border:1px solid rgba(253,248,242,.11);transition:transform .2s}
+.price-card:hover{transform:translateY(-4px)}
+.price-card.pop{background:var(--coral);position:relative}
+.pop-badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:#fbbf24;color:var(--ink);font-size:.67rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 12px;border-radius:100px}
+.price-name{font-family:var(--fd);font-weight:700;font-size:.88rem;color:rgba(253,248,242,.52);margin-bottom:.65rem}
+.price-amt{font-family:var(--fd);font-size:2.6rem;font-weight:900;letter-spacing:-.04em;line-height:1;color:#fdf8f2;margin-bottom:.18rem}
+.price-per{font-size:.74rem;color:rgba(253,248,242,.4);margin-bottom:1.4rem}
+.price-feats{list-style:none;margin-bottom:1.85rem}
+.price-feats li{font-size:.82rem;color:rgba(253,248,242,.76);padding:.38rem 0;border-bottom:1px solid rgba(253,248,242,.07);display:flex;align-items:center;gap:7px}
+.price-feats li::before{content:'✓';font-weight:800;font-size:.74rem;flex-shrink:0;color:var(--coral-m)}
+.price-card.pop .price-feats li::before{color:#fff}
+.price-btn{width:100%;padding:.7rem;border-radius:100px;background:transparent;color:#fdf8f2;border:2px solid rgba(253,248,242,.2);font-family:var(--f);font-weight:700;font-size:.83rem;cursor:pointer;transition:all .2s}
+.price-btn:hover{opacity:.82;transform:translateY(-2px)}
+.price-card.pop .price-btn{background:#fff;color:var(--coral);border-color:#fff}
+
+footer{border-top:1px solid var(--border);padding:1.75rem 2.5rem;background:var(--surface)}
+.foot-in{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;font-size:.76rem;color:var(--ink3)}
+.foot-logo{font-family:var(--fd);font-weight:700;font-size:1rem;cursor:pointer;color:var(--ink)}
+.foot-logo em{font-style:italic;color:var(--coral)}
+
+/* ══════════════ WORKSPACE ══════════════ */
+.ws-topbar{height:var(--topbar);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;background:var(--surface);border-bottom:1px solid var(--border);gap:1rem}
+.ws-logo{display:flex;align-items:center;gap:8px;font-family:var(--fd);font-weight:700;font-size:1.1rem;cursor:pointer;color:var(--ink)}
+.ws-logo em{font-style:italic;color:var(--coral)}
+.ws-logo-icon{width:30px;height:30px;background:var(--coral);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ws-title{font-family:var(--fd);font-weight:700;font-size:1rem;color:var(--ink2)}
+.ws-user{display:flex;align-items:center;gap:8px}
+.ws-back{display:flex;align-items:center;gap:5px;font-size:.8rem;font-weight:600;color:var(--ink2);cursor:pointer;padding:.36rem .85rem;border-radius:100px;border:1px solid var(--border2);transition:all .18s;background:transparent;font-family:var(--f)}
+.ws-back:hover{color:var(--coral);border-color:var(--coral)}
+
+.ws-body{display:flex;flex:1;overflow:hidden}
+
+/* SIDEBAR */
+.ws-sidebar{width:var(--sidebar);flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto}
+.ws-sb-section{padding:.5rem .75rem}
+.ws-sb-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);padding:.6rem .75rem .3rem}
+.ws-sb-item{display:flex;align-items:center;gap:9px;padding:.58rem .75rem;border-radius:var(--rs);cursor:pointer;font-size:.84rem;font-weight:500;color:var(--ink2);transition:all .15s;margin:1px 0}
+.ws-sb-item:hover{background:var(--cream);color:var(--ink)}
+.ws-sb-item.active{background:var(--coral-s);color:var(--coral-d);font-weight:600}
+.ws-sb-item svg{flex-shrink:0}
+.ws-sb-divider{height:1px;background:var(--border);margin:.5rem .75rem}
+.ws-user-row{margin-top:auto;padding:.85rem .75rem;border-top:1px solid var(--border);display:flex;align-items:center;gap:9px}
+.ws-u-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--coral),#f59e0b);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;color:#fff;flex-shrink:0}
+.ws-u-name{font-size:.82rem;font-weight:600;color:var(--ink);line-height:1.2}
+.ws-u-plan{font-size:.7rem;color:var(--ink3)}
+
+/* MAIN AREA */
+.ws-main{flex:1;overflow-y:auto;display:flex;flex-direction:column;background:var(--cream)}
+
+/* TABS */
+.ws-tabs{display:flex;gap:2px;padding:.85rem 1.5rem .6rem;border-bottom:1px solid var(--border);background:var(--surface)}
+.ws-tab{display:flex;align-items:center;gap:6px;padding:.42rem 1rem;border-radius:var(--rs);font-size:.82rem;font-weight:600;color:var(--ink2);cursor:pointer;border:none;background:transparent;font-family:var(--f);transition:all .18s}
+.ws-tab:hover{background:var(--cream);color:var(--ink)}
+.ws-tab.active{background:var(--coral-s);color:var(--coral-d)}
+
+/* WORKSPACE CONTENT */
+.ws-content{padding:1.75rem 1.5rem;flex:1}
+.ws-section{display:none}.ws-section.active{display:block}
+
+/* gen layout */
+.gen-layout{display:grid;grid-template-columns:360px 1fr;gap:1.5rem;align-items:start}
+.gen-form-col{position:sticky;top:1.75rem}
+.gen-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.75rem;box-shadow:var(--sh)}
+.gen-card-title{font-family:var(--fd);font-weight:700;font-size:1rem;margin-bottom:1.4rem;display:flex;align-items:center;gap:7px}
+.gen-card-title::before{content:'✦';color:var(--coral);font-size:.85rem}
+.model-strip{display:flex;align-items:center;gap:10px;margin-bottom:1.1rem;padding:.68rem .95rem;background:var(--cream);border-radius:var(--rs);border:1px solid var(--border)}
+.model-strip label{font-size:.68rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.model-strip select{flex:1;border:none;background:transparent;font-size:.86rem;color:var(--ink);font-family:var(--f);outline:none;cursor:pointer}
+.fg{margin-bottom:1rem}
+.fl{display:block;font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);margin-bottom:.35rem}
+select,input[type=text]{width:100%;padding:.64rem .95rem;border:1.5px solid var(--border2);border-radius:var(--rs);background:var(--cream);font-family:var(--f);font-size:.88rem;color:var(--ink);appearance:none;outline:none;transition:border-color .18s,background .18s}
+select:focus,input[type=text]:focus{border-color:var(--coral);background:var(--surface)}
+.sw{position:relative}.sw::after{content:'▾';position:absolute;right:11px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--ink3);font-size:.8rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.gen-btn{width:100%;padding:.88rem;border-radius:var(--rs);background:var(--coral);color:#fff;border:none;font-family:var(--fd);font-weight:700;font-size:.95rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:.2rem;box-shadow:0 4px 18px rgba(224,92,42,.3)}
+.gen-btn:hover:not(:disabled){background:var(--coral-d);transform:translateY(-2px);box-shadow:0 7px 26px rgba(224,92,42,.38)}
+.gen-btn:disabled{background:#f0b59a;cursor:not-allowed;transform:none;box-shadow:none}
+.spinner{width:16px;height:16px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* output */
+.out-empty{background:var(--surface);border:2px dashed var(--border2);border-radius:var(--r);padding:3.5rem 2rem;text-align:center}
+.out-empty-icon{font-size:2.4rem;opacity:.18;margin-bottom:.9rem}
+.out-empty h3{font-family:var(--fd);font-weight:700;font-size:1.05rem;color:var(--ink2);margin-bottom:.45rem}
+.out-empty p{font-size:.82rem;color:var(--ink3);line-height:1.6}
+.result-card{background:var(--surface);border:1.5px solid rgba(224,92,42,.18);border-radius:var(--r);padding:1.65rem;display:none;box-shadow:var(--sh)}
+.result-card.visible{display:block}
+.result-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem;flex-wrap:wrap;gap:8px}
+.r-badge{background:var(--teal-s);color:#166534;font-size:.68rem;font-weight:700;border-radius:100px;padding:3px 10px;letter-spacing:.04em;text-transform:uppercase}
+.r-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.model-tag{font-size:.7rem;color:var(--ink3);display:flex;align-items:center;gap:4px}
+.model-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);display:inline-block}
+.r-acts{display:flex;gap:6px}
+.r-btn{display:flex;align-items:center;gap:5px;padding:.36rem .85rem;border-radius:100px;border:1.5px solid var(--border2);background:transparent;font-family:var(--f);font-size:.74rem;font-weight:600;color:var(--ink2);cursor:pointer;transition:all .15s}
+.r-btn:hover{border-color:var(--coral);color:var(--coral)}
+.result-content{font-size:.88rem;line-height:1.88;color:var(--ink);white-space:pre-wrap;word-break:break-word}
+.result-foot{display:flex;justify-content:space-between;align-items:center;margin-top:1rem;padding-top:.85rem;border-top:1px solid var(--border);font-size:.7rem}
+.char-count{color:var(--ink3)}
+.speed-tag{color:var(--teal);font-weight:600}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.cursor{display:inline-block;width:2px;height:12px;background:var(--coral);margin-left:1px;vertical-align:middle;animation:blink .7s infinite}
+
+/* history */
+.hist-empty{text-align:center;padding:3rem;color:var(--ink3)}
+.hist-empty svg{opacity:.2;margin-bottom:.75rem}
+.hist-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.25rem;margin-bottom:.75rem;display:flex;align-items:flex-start;gap:1rem;cursor:pointer;transition:box-shadow .18s}
+.hist-item:hover{box-shadow:var(--sh)}
+.hist-icon{width:36px;height:36px;border-radius:var(--rs);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1rem}
+.hi-blog{background:var(--coral-s)}.hi-email{background:var(--teal-s)}.hi-social{background:#fef9ee}.hi-ad{background:#f5f3ff}
+.hist-body{flex:1;min-width:0}
+.hist-title{font-weight:600;font-size:.86rem;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hist-meta{font-size:.74rem;color:var(--ink3)}
+.hist-badge{font-size:.66rem;font-weight:700;padding:2px 8px;border-radius:100px;flex-shrink:0;margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
+.hb-blog{background:var(--coral-s);color:var(--coral-d)}
+.hb-email{background:var(--teal-s);color:var(--teal)}
+.hb-social{background:#fef9ee;color:#92400e}
+.hb-ad{background:#f5f3ff;color:#6d28d9}
+
+/* templates */
+.tmpl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.tmpl-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.35rem;cursor:pointer;transition:all .18s}
+.tmpl-card:hover{border-color:var(--coral);transform:translateY(-3px);box-shadow:var(--sh)}
+.tmpl-icon{font-size:1.6rem;margin-bottom:.65rem}
+.tmpl-name{font-family:var(--fd);font-weight:700;font-size:.92rem;margin-bottom:.3rem}
+.tmpl-desc{font-size:.78rem;color:var(--ink2);line-height:1.55}
+
+/* settings */
+.settings-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.65rem;margin-bottom:1rem}
+.settings-title{font-family:var(--fd);font-weight:700;font-size:.95rem;margin-bottom:1.1rem;display:flex;align-items:center;gap:7px}
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:.65rem 0;border-bottom:1px solid var(--border)}
+.settings-row:last-child{border-bottom:none}
+.settings-lbl{font-size:.85rem;font-weight:500}
+.settings-val{font-size:.82rem;color:var(--ink2)}
+.toggle{width:38px;height:22px;border-radius:100px;background:var(--coral);cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.toggle::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:3px;right:3px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+
+/* ══════════════ MODAL ══════════════ */
+.modal-bg{position:fixed;inset:0;background:rgba(28,20,16,.52);backdrop-filter:blur(8px);z-index:600;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .22s}
+.modal-bg.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border-radius:22px;padding:2.35rem;width:100%;max-width:430px;box-shadow:var(--sh2);transform:translateY(22px);transition:transform .22s;position:relative}
+.modal-bg.open .modal{transform:translateY(0)}
+.modal-x{position:absolute;top:1.15rem;right:1.15rem;width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.88rem;color:var(--ink2);transition:all .18s;font-family:var(--f)}
+.modal-x:hover{background:var(--cream);color:var(--ink)}
+.m-logo-wrap{display:flex;justify-content:center;margin-bottom:1.4rem}
+.m-logo-box{width:52px;height:52px;background:var(--coral);border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(224,92,42,.3)}
+.m-title{font-family:var(--fd);font-weight:900;font-size:1.42rem;text-align:center;margin-bottom:.32rem}
+.m-sub{text-align:center;color:var(--ink2);font-size:.84rem;margin-bottom:1.55rem}
+.m-tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--cream);border-radius:var(--rs);padding:3px;margin-bottom:1.4rem;gap:3px}
+.mtab{padding:.5rem;border-radius:8px;border:none;background:transparent;font-family:var(--f);font-size:.82rem;font-weight:600;color:var(--ink2);cursor:pointer;transition:all .18s}
+.mtab.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 5px rgba(0,0,0,.08)}
+.mfg{margin-bottom:.9rem}
+.mfl{display:block;font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);margin-bottom:.36rem}
+.minput{width:100%;padding:.65rem .95rem;border:1.5px solid var(--border2);border-radius:var(--rs);background:var(--cream);font-family:var(--f);font-size:.9rem;color:var(--ink);outline:none;transition:border-color .18s}
+.minput:focus{border-color:var(--coral);background:var(--surface)}
+.ep-label{font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);margin-bottom:.5rem}
+.ep-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+.ep{display:flex;align-items:center;gap:5px;padding:.35rem .8rem;border-radius:100px;border:1.5px solid var(--border2);background:var(--surface);font-size:.75rem;font-weight:600;color:var(--ink2);cursor:pointer;transition:all .18s;font-family:var(--f)}
+.ep:hover{border-color:var(--coral);color:var(--coral)}
+.ep.sel{border-color:var(--coral);background:var(--coral-s);color:var(--coral-d)}
+.m-div{display:flex;align-items:center;gap:10px;margin:1rem 0;font-size:.73rem;color:var(--ink3)}
+.m-div::before,.m-div::after{content:'';flex:1;height:1px;background:var(--border2)}
+.m-submit{width:100%;padding:.84rem;border-radius:var(--rs);background:var(--coral);color:#fff;border:none;font-family:var(--fd);font-weight:700;font-size:.95rem;cursor:pointer;transition:all .18s;box-shadow:0 4px 14px rgba(224,92,42,.28);margin-top:.38rem}
+.m-submit:hover{background:var(--coral-d);transform:translateY(-1px)}
+.m-note{font-size:.71rem;color:var(--ink3);text-align:center;margin-top:.85rem;line-height:1.6}
+.m-note a{color:var(--coral);text-decoration:none}
+
+/* TOAST */
+.toast-wrap{position:fixed;bottom:1.5rem;right:1.5rem;display:flex;flex-direction:column;gap:7px;z-index:999;pointer-events:none}
+.toast{background:var(--ink);color:#fff;border-radius:var(--rs);padding:.65rem 1.1rem;font-size:.82rem;font-weight:600;opacity:0;transform:translateY(8px);transition:all .22s}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.err{background:#dc2626}
+
+@media(max-width:900px){.gen-layout,.hero-in{grid-template-columns:1fr}.gen-form-col{position:static}.ws-sidebar{display:none}}
+@media(max-width:768px){.feat-grid,.price-grid,.samples-grid,.form-row,.tmpl-grid{grid-template-columns:1fr}.nav-links{display:none}nav{padding:0 1.25rem}}
+
+/* ══════════════ CHAT TAB ══════════════ */
+.chat-wrap{display:flex;height:100%;flex-direction:column;background:#1e1e1e;border-radius:12px;overflow:hidden;margin:0 1.5rem 1.5rem}
+.chat-topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:#171717;border-bottom:1px solid #333;flex-shrink:0}
+.chat-model-pick{display:flex;align-items:center;gap:8px;background:#2a2a2a;border:1px solid #3a3a3a;border-radius:8px;padding:5px 10px}
+.chat-model-pick select{background:transparent;border:none;color:#ececec;font-size:13px;font-weight:500;font-family:var(--f);cursor:pointer;outline:none;appearance:none}
+.chat-model-pick select option{background:#2a2a2a;color:#ececec}
+.chat-topbar-actions{display:flex;gap:6px}
+.chat-icon-btn{width:30px;height:30px;border-radius:8px;border:none;background:transparent;color:#888;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.chat-icon-btn:hover{background:#3a3a3a;color:#ececec}
+.chat-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:18px}
+.chat-welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;text-align:center;padding:32px}
+.chat-welcome-icon{width:50px;height:50px;background:var(--coral);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.chat-welcome h3{font-family:var(--fd);font-size:1.3rem;font-weight:700;color:#ececec;margin-bottom:8px}
+.chat-welcome p{font-size:13px;color:#888;max-width:320px;line-height:1.6;margin-bottom:22px}
+.chat-suggestions{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:440px}
+.chat-sug{background:#2a2a2a;border:1px solid #3a3a3a;border-radius:10px;padding:11px 13px;cursor:pointer;text-align:left;transition:background .15s}
+.chat-sug:hover{background:#333}
+.chat-sug-title{font-size:12px;font-weight:600;color:#ececec;margin-bottom:2px}
+.chat-sug-sub{font-size:11px;color:#888}
+.chat-msg{display:flex;gap:10px;align-items:flex-start}
+.chat-msg.user{flex-direction:row-reverse}
+.chat-msg-av{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;margin-top:2px}
+.chat-msg-av.ai{background:var(--coral)}
+.chat-msg-av.user{background:#5a5a5a;color:#fff}
+.chat-msg-body{flex:1;min-width:0}
+.chat-msg-name{font-size:11px;font-weight:600;color:#888;margin-bottom:4px}
+.chat-msg.user .chat-msg-name{text-align:right}
+.chat-msg-text{font-size:13px;line-height:1.75;color:#ececec;word-break:break-word;white-space:pre-wrap}
+.chat-msg-text.user-bubble{background:#2f2f2f;border-radius:14px 14px 4px 14px;padding:9px 13px;display:inline-block;max-width:100%}
+.chat-msg.user .chat-msg-body{display:flex;flex-direction:column;align-items:flex-end}
+.chat-msg-acts{display:flex;gap:4px;margin-top:5px;opacity:0;transition:opacity .15s}
+.chat-msg:hover .chat-msg-acts{opacity:1}
+.chat-msg-act{background:transparent;border:none;color:#888;cursor:pointer;padding:3px 6px;border-radius:5px;font-size:11px;display:flex;align-items:center;gap:3px;font-family:var(--f)}
+.chat-msg-act:hover{background:#3a3a3a;color:#ececec}
+.chat-input-area{padding:12px 16px 14px;background:#171717;flex-shrink:0}
+.chat-input-wrap{position:relative}
+.chat-input{width:100%;background:#2a2a2a;border:1px solid #3a3a3a;border-radius:12px;padding:11px 48px 11px 14px;font-size:13px;color:#ececec;font-family:var(--f);resize:none;outline:none;line-height:1.6;min-height:44px;max-height:160px;overflow-y:auto}
+.chat-input:focus{border-color:#555}
+.chat-input::placeholder{color:#666}
+.chat-send{position:absolute;right:9px;bottom:9px;width:28px;height:28px;border-radius:8px;background:var(--coral);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.chat-send:hover{background:var(--coral-d)}
+.chat-send:disabled{background:#444;cursor:not-allowed}
+.chat-footer-note{text-align:center;font-size:10px;color:#555;margin-top:6px}
+.chat-cursor{display:inline-block;width:2px;height:12px;background:#ececec;margin-left:1px;vertical-align:middle;animation:blink .6s infinite}
+pre.chat-pre{background:#111;border-radius:6px;overflow:hidden;margin:8px 0;border:1px solid #333}
+.chat-code-hdr{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;background:rgba(0,0,0,.3);font-size:10px;color:#888}
+.chat-copy-code{background:transparent;border:none;color:#888;cursor:pointer;font-size:10px;font-family:var(--f);padding:1px 6px;border-radius:3px}
+.chat-copy-code:hover{background:#3a3a3a;color:#ececec}
+pre.chat-pre code{display:block;padding:12px;font-size:12px;line-height:1.5;overflow-x:auto;color:#e8e8e8;font-family:'Courier New',monospace}
+.chat-inline-code{background:#2a2a2a;padding:1px 5px;border-radius:3px;font-size:11px;font-family:'Courier New',monospace;color:#e8e8e8}
+.chat-messages::-webkit-scrollbar{width:4px}
+.chat-messages::-webkit-scrollbar-thumb{background:#444;border-radius:2px}
+
+/* ══════════════ IMAGE GENERATION ══════════════ */
+.imggen-wrap{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.imggen-title{font-family:var(--fd);font-weight:700;font-size:.9rem;margin-bottom:1rem;display:flex;align-items:center;gap:7px;color:var(--ink)}
+.imggen-title::before{content:'🖼';font-size:.85rem}
+.imggen-prompt-row{display:flex;gap:.6rem;margin-bottom:.9rem}
+.imggen-input{flex:1;padding:.62rem .95rem;border:1.5px solid var(--border2);border-radius:var(--rs);background:var(--cream);font-family:var(--f);font-size:.86rem;color:var(--ink);outline:none;transition:border-color .18s}
+.imggen-input:focus{border-color:var(--coral);background:var(--surface)}
+.imggen-opts{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:.9rem}
+.imggen-btn{padding:.82rem;border-radius:var(--rs);background:var(--teal);color:#fff;border:none;font-family:var(--fd);font-weight:700;font-size:.88rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px;width:100%;box-shadow:0 4px 14px rgba(26,122,100,.25)}
+.imggen-btn:hover:not(:disabled){background:#155f4e;transform:translateY(-2px)}
+.imggen-btn:disabled{background:#a0c4bb;cursor:not-allowed;transform:none;box-shadow:none}
+.imggen-result{margin-top:1rem;display:none}
+.imggen-result.visible{display:block}
+.imggen-result img{width:100%;border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--sh);display:block}
+.imggen-result-acts{display:flex;gap:6px;margin-top:.75rem;flex-wrap:wrap}
+.imggen-loading{background:var(--cream2);border:1px solid var(--border);border-radius:var(--r);height:320px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+.imggen-loading-dot{display:flex;gap:6px}
+.imggen-loading-dot span{width:8px;height:8px;border-radius:50%;background:var(--teal);animation:dotpulse 1.2s ease-in-out infinite}
+.imggen-loading-dot span:nth-child(2){animation-delay:.2s}
+.imggen-loading-dot span:nth-child(3){animation-delay:.4s}
+@keyframes dotpulse{0%,80%,100%{transform:scale(.8);opacity:.4}40%{transform:scale(1.1);opacity:1}}
+.imggen-loading p{font-size:.82rem;color:var(--ink3);font-style:italic}
+.imggen-gallery{margin-top:1.5rem}
+.imggen-gallery-title{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:.75rem}
+.imggen-gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem}
+.imggen-gallery-item{border-radius:8px;overflow:hidden;cursor:pointer;transition:transform .18s;border:1px solid var(--border);aspect-ratio:1}
+.imggen-gallery-item:hover{transform:scale(1.03)}
+.imggen-gallery-item img{width:100%;height:100%;object-fit:cover;display:block}
+.imggen-empty-gallery{text-align:center;padding:1.5rem;background:var(--cream2);border-radius:var(--r);border:1px dashed var(--border2)}
+.imggen-empty-gallery p{font-size:.8rem;color:var(--ink3)}
+.imggen-style-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.9rem}
+.style-pill{padding:.3rem .8rem;border-radius:100px;border:1.5px solid var(--border2);background:var(--surface);font-size:.74rem;font-weight:600;color:var(--ink2);cursor:pointer;transition:all .15s;font-family:var(--f)}
+.style-pill:hover{border-color:var(--teal);color:var(--teal)}
+.style-pill.active{border-color:var(--teal);background:var(--teal-s);color:var(--teal)}
+
+/* ══ PLAN LIMITS ══ */
+.limit-bar-wrap{background:var(--cream2);border:1px solid var(--border);border-radius:var(--rs);padding:.75rem 1rem;margin-bottom:1.1rem;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.limit-bar-left{display:flex;flex-direction:column;gap:4px;flex:1}
+.limit-bar-label{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);display:flex;justify-content:space-between}
+.limit-bar-track{height:6px;background:var(--border);border-radius:100px;overflow:hidden}
+.limit-bar-fill{height:100%;border-radius:100px;transition:width .4s ease;background:var(--teal)}
+.limit-bar-fill.warn{background:#f59e0b}
+.limit-bar-fill.danger{background:#ef4444}
+.limit-upgrade-btn{background:var(--coral);color:#fff;border:none;font-family:var(--f);font-weight:700;font-size:.72rem;padding:.35rem .9rem;border-radius:100px;cursor:pointer;white-space:nowrap;transition:all .18s}
+.limit-upgrade-btn:hover{background:var(--coral-d)}
+.upgrade-modal-bg{position:fixed;inset:0;background:rgba(28,20,16,.6);backdrop-filter:blur(10px);z-index:700;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .22s}
+.upgrade-modal-bg.open{opacity:1;pointer-events:all}
+.upgrade-modal{background:var(--surface);border-radius:22px;padding:2.2rem;width:100%;max-width:400px;margin:16px;box-shadow:0 20px 60px rgba(28,20,16,.2);transform:translateY(20px);transition:transform .22s;text-align:center}
+.upgrade-modal-bg.open .upgrade-modal{transform:translateY(0)}
+.upgrade-icon{font-size:2.5rem;margin-bottom:.85rem}
+.upgrade-modal h3{font-family:var(--fd);font-size:1.3rem;font-weight:900;margin-bottom:.5rem}
+.upgrade-modal p{font-size:.86rem;color:var(--ink2);line-height:1.65;margin-bottom:1.4rem}
+.upgrade-modal-btns{display:flex;flex-direction:column;gap:8px}
+.upgrade-modal-cta{background:var(--coral);color:#fff;border:none;font-family:var(--fd);font-weight:700;font-size:.95rem;padding:.82rem;border-radius:var(--rs);cursor:pointer;transition:all .18s;box-shadow:0 4px 14px rgba(224,92,42,.3)}
+.upgrade-modal-cta:hover{background:var(--coral-d);transform:translateY(-2px)}
+.upgrade-modal-skip{background:transparent;border:1.5px solid var(--border2);color:var(--ink2);font-family:var(--f);font-weight:600;font-size:.84rem;padding:.7rem;border-radius:var(--rs);cursor:pointer;transition:all .18s}
+.upgrade-modal-skip:hover{border-color:var(--coral);color:var(--coral)}
+.locked-overlay{position:relative}
+.locked-overlay::after{content:'🔒 Pro Feature';position:absolute;inset:0;background:rgba(253,248,242,.88);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:var(--ink2);border-radius:var(--rs);pointer-events:all;cursor:pointer}
+.type-locked{opacity:.4;pointer-events:none}
+</style>
+</head>
+<body>
+
+<!-- ══════════ LANDING PAGE ══════════ -->
+<div id="landing" class="view active">
+  <nav>
+    <div class="nav-in">
+      <div class="logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+        <div class="logo-icon"><svg width="36" height="36" viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="9.5" stroke="white" stroke-width="1.5"/><circle cx="18" cy="10" r="1.7" fill="white"/><circle cx="24.5" cy="13.5" r="1.7" fill="white"/><circle cx="24.5" cy="22.5" r="1.7" fill="white"/><circle cx="18" cy="26" r="1.7" fill="white"/><circle cx="11.5" cy="22.5" r="1.7" fill="white"/><circle cx="11.5" cy="13.5" r="1.7" fill="white"/><circle cx="18" cy="18" r="2.2" fill="white"/><line x1="18" y1="10" x2="18" y2="18" stroke="white" stroke-width="1" stroke-opacity=".75"/><line x1="24.5" y1="13.5" x2="18" y2="18" stroke="white" stroke-width="1" stroke-opacity=".75"/><line x1="24.5" y1="22.5" x2="18" y2="18" stroke="white" stroke-width="1" stroke-opacity=".75"/><line x1="18" y1="26" x2="18" y2="18" stroke="white" stroke-width="1" stroke-opacity=".75"/><line x1="11.5" y1="22.5" x2="18" y2="18" stroke="white" stroke-width="1" stroke-opacity=".75"/><line x1="11.5" y1="13.5" x2="18" y2="18" stroke="white" stroke-width="1" stroke-opacity=".75"/><line x1="18" y1="10" x2="24.5" y2="13.5" stroke="white" stroke-width=".8" stroke-opacity=".32"/><line x1="24.5" y1="13.5" x2="24.5" y2="22.5" stroke="white" stroke-width=".8" stroke-opacity=".32"/><line x1="24.5" y1="22.5" x2="18" y2="26" stroke="white" stroke-width=".8" stroke-opacity=".32"/><line x1="18" y1="26" x2="11.5" y2="22.5" stroke="white" stroke-width=".8" stroke-opacity=".32"/><line x1="11.5" y1="22.5" x2="11.5" y2="13.5" stroke="white" stroke-width=".8" stroke-opacity=".32"/><line x1="11.5" y1="13.5" x2="18" y2="10" stroke="white" stroke-width=".8" stroke-opacity=".32"/></svg></div>
+        Chatly
+      </div>
+      <ul class="nav-links">
+        <li><a onclick="go('features')">Features</a></li>
+        <li><a onclick="go('samples')">Samples</a></li>
+        <li><a onclick="go('pricing')">Pricing</a></li>
+      </ul>
+      <div class="nav-r">
+        <button class="btn-ghost" onclick="openModal('login')">Login</button>
+        <button class="btn-coral" onclick="openModal('signup')">Get Started Free</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-in">
+      <div>
+        <div class="hero-badge">Powered by Groq — Ultra-Fast AI</div>
+        <h1>Generate <em>Blogs, Emails</em> &amp; Social Posts in Seconds</h1>
+        <p class="hero-sub">Real AI content — no setup, no API key needed. Sign up free and start creating in your own personal workspace.</p>
+        <div class="hero-btns">
+          <button class="btn-hero" onclick="openModal('signup')">Start Generating Free</button>
+          <button class="btn-hero-o" onclick="openModal('login')">Log In</button>
+        </div>
+        <div class="trust"><span class="stars">★★★★★</span> Trusted by 12,000+ creators</div>
+      </div>
+      <div>
+        <div class="hero-card">
+          <div class="hc-top"><div class="hc-dots"><div class="hcd hcd-r"></div><div class="hcd hcd-y"></div><div class="hcd hcd-g"></div></div><div class="hc-tag">Blog Post · Professional</div></div>
+          <div class="hc-bar"><div class="hc-prog"></div></div>
+          <div class="hc-body">
+            <div class="hc-text"><strong>5 Proven Strategies to Grow Your Email List in 2025</strong><br/><br/>These five organic strategies helped brands grow by 200%+ without paid traffic...</div>
+            <div class="hc-acts"><button class="hca">📋 Copy</button><button class="hca">✏️ Edit</button><button class="hca p">⬇ Download</button></div>
+          </div>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-pill"><div class="stat-num">2s</div><div class="stat-lbl">Average generation time</div></div>
+          <div class="stat-pill"><div class="stat-num">4</div><div class="stat-lbl">AI models to choose from</div></div>
+          <div class="stat-pill"><div class="stat-num">12k+</div><div class="stat-lbl">Creators using Chatly</div></div>
+          <div class="stat-pill"><div class="stat-num">Free</div><div class="stat-lbl">No API key needed</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="sec sec-cream" id="features">
+    <div class="sec-in">
+      <div class="sec-label">Why Chatly</div>
+      <h2>Built for creators who move fast</h2>
+      <p class="sec-sub">Real AI, zero setup, instant results.</p>
+      <div class="feat-grid">
+        <div class="feat-card"><div class="feat-icon fi-c"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><h3>Lightning Fast</h3><p class="feat-desc">Groq's custom chips deliver results in under 2 seconds — the fastest AI generation available anywhere.</p></div>
+        <div class="feat-card"><div class="feat-icon fi-t"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3>Your Own Workspace</h3><p class="feat-desc">A dedicated workspace with sidebar navigation, history, templates and settings — all in one place.</p></div>
+        <div class="feat-card"><div class="feat-icon fi-w"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div><h3>4 AI Models</h3><p class="feat-desc">Choose from Llama 3.3 70B, Mixtral, Gemma 2 — all state-of-the-art, all free.</p></div>
+        <div class="feat-card"><div class="feat-icon fi-c"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><h3>4 Content Types</h3><p class="feat-desc">Blog posts, emails, social posts and ad copy — tailored to your tone and topic.</p></div>
+        <div class="feat-card"><div class="feat-icon fi-t"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><h3>Live Streaming</h3><p class="feat-desc">Watch your content appear word-by-word in real time as AI writes for you.</p></div>
+        <div class="feat-card"><div class="feat-icon fi-w"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div><h3>Copy &amp; Download</h3><p class="feat-desc">One-click copy and download on every output. Ready to use instantly.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SAMPLES -->
+  <section class="sec sec-white" id="samples">
+    <div class="sec-in">
+      <div class="sec-label">Sample Outputs</div>
+      <h2>See what Chatly creates</h2>
+      <p class="sec-sub">Generated in under 2 seconds.</p>
+      <div class="samples-grid">
+        <div class="sample-card"><span class="s-type">Blog Post</span><div class="s-title">10 Ways AI Is Transforming Content Marketing</div><div class="s-excerpt">AI is reshaping how brands create, distribute, and optimize content. From automated copywriting to predictive analytics, here are 10 ways AI is revolutionizing the landscape…</div><div class="s-acts"><button class="r-btn" onclick="copyText(this.closest('.sample-card').querySelector('.s-excerpt').textContent)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div></div>
+        <div class="sample-card"><span class="s-type">Email</span><div class="s-title">Subject: Your Weekly Productivity Boost</div><div class="s-excerpt">Hi there! Ready to supercharge your workflow? This week we are sharing 3 battle-tested strategies our top creators use to produce twice the content in half the time…</div><div class="s-acts"><button class="r-btn" onclick="copyText(this.closest('.sample-card').querySelector('.s-excerpt').textContent)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div></div>
+        <div class="sample-card"><span class="s-type">Social Post</span><div class="s-title">LinkedIn — Thought Leadership</div><div class="s-excerpt">Hot take: The best content is not written — it is engineered.
+
+We analysed 50,000 viral posts and found one thing in common: they solve a specific problem in under 60 seconds.</div><div class="s-acts"><button class="r-btn" onclick="copyText(this.closest('.sample-card').querySelector('.s-excerpt').textContent)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="sec sec-dark" id="pricing">
+    <div class="sec-in">
+      <div class="sec-label" style="color:#f47c50">Pricing</div>
+      <h2 style="color:#fdf8f2">Simple, honest pricing</h2>
+      <p class="sec-sub">No hidden fees. Cancel anytime.</p>
+      <div class="price-grid">
+        <div class="price-card"><div class="price-name">Free</div><div class="price-amt">$0</div><div class="price-per">forever</div><ul class="price-feats"><li>10 generations/month</li><li>3 content types only (Blog, Email, Social)</li><li>Copy &amp; download</li><li style="color:rgba(253,248,242,.35);text-decoration:line-through">AI Image Generation</li><li style="color:rgba(253,248,242,.35);text-decoration:line-through">Ad Copy</li><li style="color:rgba(253,248,242,.35);text-decoration:line-through">All AI models</li></ul><button class="price-btn" onclick="openModal('signup')">Get Started Free</button></div>
+        <div class="price-card pop"><div class="pop-badge">Most Popular</div><div class="price-name">Pro</div><div class="price-amt">$19</div><div class="price-per">per month</div><ul class="price-feats"><li>Unlimited generations</li><li>All 4 AI models</li><li>All content types</li><li>Full workspace access</li><li>Download history</li><li>AI Image Generation</li></ul><button class="price-btn" onclick="openModal('signup')">Start Free Trial</button></div>
+        <div class="price-card" style="position:relative;overflow:hidden">
+  <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#f59e0b,#ef4444,#8b5cf6)"></div>
+  <div class="price-name" style="display:flex;align-items:center;gap:6px">Agency <span style="font-size:.6rem;background:rgba(253,248,242,.12);color:#fbbf24;padding:2px 7px;border-radius:100px;letter-spacing:.04em;font-weight:800">ENTERPRISE</span></div>
+  <div class="price-amt">$59</div>
+  <div class="price-per">per month</div>
+  <ul class="price-feats">
+    <li>Everything in Pro</li>
+    <li>AI Image Generation 🖼</li>
+    <li>Full White-Label Branding 🎨</li>
+    <li>Team Collaboration 👥</li>
+    <li>Priority AI Speed ⚡</li>
+    <li>Advanced AI Models 🤖</li>
+    <li>Client Project Management 📂</li>
+    <li>Analytics Dashboard 📊</li>
+    <li>API Access 🔑</li>
+    <li>Custom AI Brand Voice 🧠</li>
+    <li>Priority Support 📞</li>
+    <li>5 team seats</li>
+    <li>White-label exports</li>
+  </ul>
+  <button class="price-btn" onclick="openModal('signup')">Contact Sales</button>
+</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot-in">
+      <div class="foot-logo">Chatly</div>
+      <div style="font-size:.74rem">Powered by <strong style="color:var(--teal)">Groq</strong></div>
+      <span>© 2026 Chatly. All rights reserved.</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════ WORKSPACE ══════════ -->
+<div id="workspace">
+
+  <!-- TOP BAR -->
+  <div class="ws-topbar">
+    <div class="ws-logo" onclick="goLanding()">
+      <div class="ws-logo-icon"><svg width="30" height="30" viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="9.5" stroke="white" stroke-width="1.5"/><circle cx="18" cy="10" r="1.7" fill="white"/><circle cx="24.5" cy="13.5" r="1.7" fill="white"/><circle cx="24.5" cy="22.5" r="1.7" fill="white"/><circle cx="18" cy="26" r="1.7" fill="white"/><circle cx="11.5" cy="22.5" r="1.7" fill="white"/><circle cx="11.5" cy="13.5" r="1.7" fill="white"/><circle cx="18" cy="18" r="2.2" fill="white"/><line x1="18" y1="10" x2="18" y2="18" stroke="white" stroke-width="1" stroke-opacity=".75"/><line x1="24.5" y1="13.5" x2="18" y2="18" stroke="white" stroke-width="1" stroke-opacity=".75"/><line x1="24.5" y1="22.5" x2="18" y2="18" stroke="white" stroke-width="1" stroke-opacity=".75"/><line x1="18" y1="26" x2="18" y2="18" stroke="white" stroke-width="1" stroke-opacity=".75"/><line x1="11.5" y1="22.5" x2="18" y2="18" stroke="white" stroke-width="1" stroke-opacity=".75"/><line x1="11.5" y1="13.5" x2="18" y2="18" stroke="white" stroke-width="1" stroke-opacity=".75"/><line x1="18" y1="10" x2="24.5" y2="13.5" stroke="white" stroke-width=".8" stroke-opacity=".32"/><line x1="24.5" y1="13.5" x2="24.5" y2="22.5" stroke="white" stroke-width=".8" stroke-opacity=".32"/><line x1="24.5" y1="22.5" x2="18" y2="26" stroke="white" stroke-width=".8" stroke-opacity=".32"/><line x1="18" y1="26" x2="11.5" y2="22.5" stroke="white" stroke-width=".8" stroke-opacity=".32"/><line x1="11.5" y1="22.5" x2="11.5" y2="13.5" stroke="white" stroke-width=".8" stroke-opacity=".32"/><line x1="11.5" y1="13.5" x2="18" y2="10" stroke="white" stroke-width=".8" stroke-opacity=".32"/></svg></div>
+      Chatly
+    </div>
+    <div class="ws-user" id="ws-user-row">
+      <!-- filled by JS -->
+    </div>
+  </div>
+
+  <div class="ws-body">
+    <!-- SIDEBAR -->
+    <aside class="ws-sidebar">
+      <div class="ws-sb-section">
+        <div class="ws-sb-item active" id="sb-generate" onclick="switchWsTab('generate', this)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          Generate
+        </div>
+        <div class="ws-sb-item" id="sb-history" onclick="switchWsTab('history', this)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          History
+        </div>
+        <div class="ws-sb-item" id="sb-templates" onclick="switchWsTab('templates', this)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Templates
+        </div>
+      </div>
+      <div class="ws-sb-divider"></div>
+      <div class="ws-sb-section">
+        <div class="ws-sb-label">Account</div>
+        <div class="ws-sb-item" id="sb-images" onclick="switchWsTab('images', this)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          Image Generation
+        </div>
+        <div class="ws-sb-item" id="sb-chat" onclick="switchWsTab('chat', this)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Chat with AI
+        </div>
+        <div class="ws-sb-item" id="sb-settings" onclick="switchWsTab('settings', this)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M4.93 19.07l1.41-1.41M19.07 19.07l-1.41-1.41M20 12h2M2 12h2M12 20v2M12 2v2"/></svg>
+          Settings
+        </div>
+      </div>
+      <div class="ws-user-row" id="ws-sidebar-user">
+        <!-- filled by JS -->
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="ws-main">
+
+      <!-- GENERATE TAB -->
+      <div id="tab-generate" class="ws-section active">
+        <div class="ws-tabs">
+          <button class="ws-tab active">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            Content Generator
+          </button>
+        </div>
+        <div class="ws-content">
+          <div style="margin-bottom:1.5rem">
+            <div style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);margin-bottom:.4rem">Content Generator</div>
+            <div style="font-family:var(--fd);font-size:1.5rem;font-weight:900;margin-bottom:.3rem">Create anything in seconds</div>
+            <div style="font-size:.88rem;color:var(--ink2);font-weight:300">Pick a model, choose your settings, and watch AI write for you in real time.</div>
+          </div>
+          <div class="gen-layout">
+            <!-- FORM -->
+            <div class="gen-form-col">
+              <div class="gen-card">
+                <div class="gen-card-title">Content Settings</div>
+                <div class="limit-bar-wrap" id="limitBarWrap">
+                  <div class="limit-bar-left">
+                    <div class="limit-bar-label"><span>Free Generations Used</span><span id="limitCount">0 / 10</span></div>
+                    <div class="limit-bar-track"><div class="limit-bar-fill" id="limitBarFill" style="width:0%"></div></div>
+                  </div>
+                  <button class="limit-upgrade-btn" onclick="showUpgradeModal('limit')">Upgrade to Pro</button>
+                </div>
+                <div class="model-strip">
+                  <label>AI Model</label>
+                  <select id="model">
+                    <option value="llama-3.3-70b-versatile">Llama 3.3 70B — Best quality</option>
+                    <option value="llama-3.1-8b-instant">Llama 3.1 8B — Fastest</option>
+                    <option value="mixtral-8x7b-32768">Mixtral 8x7B — Long content</option>
+                    <option value="gemma2-9b-it">Gemma 2 9B — Google model</option>
+                  </select>
+                </div>
+                <div class="form-row" style="margin-bottom:1rem">
+                  <div class="fg" style="margin:0">
+                    <label class="fl">Content Type</label>
+                    <div class="sw"><select id="contentType">
+                      <option value="">Select type…</option>
+                      <option value="blog">Blog Post</option>
+                      <option value="email">Email</option>
+                      <option value="social">Social Media Post</option>
+                      <option value="ad">Ad Copy</option>
+                    </select></div>
+                  </div>
+                  <div class="fg" style="margin:0">
+                    <label class="fl">Tone</label>
+                    <div class="sw"><select id="tone">
+                      <option value="">Select tone…</option>
+                      <option value="professional">Professional</option>
+                      <option value="casual">Casual</option>
+                      <option value="witty">Witty</option>
+                      <option value="inspirational">Inspirational</option>
+                    </select></div>
+                  </div>
+                </div>
+                <div class="fg">
+                  <label class="fl">Topic or Keywords</label>
+                  <input type="text" id="topic" placeholder="e.g. AI in marketing, remote work tips…" maxlength="200"/>
+                </div>
+                <button class="gen-btn" id="generateBtn" onclick="handleGenerate()">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  Generate Content
+                </button>
+              </div>
+            </div>
+            <!-- OUTPUT -->
+            <div>
+              <div class="out-empty" id="outEmpty">
+                <div class="out-empty-icon">✦</div>
+                <h3>Your content will appear here</h3>
+                <p>Fill in the settings and click Generate — your AI content streams in live, word by word.</p>
+              </div>
+              <div class="result-card" id="resultCard">
+                <div class="result-head">
+                  <span class="r-badge" id="resultBadge">Blog Post</span>
+                  <div class="r-meta">
+                    <span class="model-tag"><span class="model-dot"></span><span id="modelUsed">Llama 3.3 70B</span></span>
+                    <div class="r-acts">
+                      <button class="r-btn" onclick="handleCopy()"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button>
+                      <button class="r-btn" onclick="handleDownload()"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="result-content" id="resultContent"></div>
+                <div class="result-foot">
+                  <span class="char-count" id="charCount"></span>
+                  <span class="speed-tag" id="speedTag"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HISTORY TAB -->
+      <div id="tab-history" class="ws-section">
+        <div class="ws-tabs"><button class="ws-tab active"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> History</button></div>
+        <div class="ws-content">
+          <div style="font-family:var(--fd);font-size:1.4rem;font-weight:900;margin-bottom:1.25rem">Your Generation History</div>
+          <div id="hist-list">
+            <div class="hist-item"><div class="hist-icon hi-blog">📝</div><div class="hist-body"><div class="hist-title">5 Ways to Grow Your Email List</div><div class="hist-meta">Blog Post · Llama 3.3 70B · 2 mins ago</div></div><span class="hist-badge hb-blog">blog</span></div>
+            <div class="hist-item"><div class="hist-icon hi-email">📧</div><div class="hist-body"><div class="hist-title">Subject: Your Weekly Productivity Boost</div><div class="hist-meta">Email · Mixtral 8x7B · 1 hour ago</div></div><span class="hist-badge hb-email">email</span></div>
+            <div class="hist-item"><div class="hist-icon hi-social">💬</div><div class="hist-body"><div class="hist-title">LinkedIn Post — AI in Marketing</div><div class="hist-meta">Social Post · Llama 3.1 8B · Yesterday</div></div><span class="hist-badge hb-social">social</span></div>
+            <div class="hist-item"><div class="hist-icon hi-ad">⚡</div><div class="hist-body"><div class="hist-title">Ad Copy — SaaS Product Launch</div><div class="hist-meta">Ad Copy · Gemma 2 9B · 2 days ago</div></div><span class="hist-badge hb-ad">ad</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TEMPLATES TAB -->
+      <div id="tab-templates" class="ws-section">
+        <div class="ws-tabs"><button class="ws-tab active"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Templates</button></div>
+        <div class="ws-content">
+          <div style="font-family:var(--fd);font-size:1.4rem;font-weight:900;margin-bottom:1.25rem">Quick-start Templates</div>
+          <div class="tmpl-grid">
+            <div class="tmpl-card" onclick="useTemplate('blog','professional','How to grow your business with AI')"><div class="tmpl-icon">📝</div><div class="tmpl-name">Business Blog Post</div><div class="tmpl-desc">Professional tone. Perfect for thought leadership and SEO content.</div></div>
+            <div class="tmpl-card" onclick="useTemplate('email','casual','Weekly newsletter')"><div class="tmpl-icon">📧</div><div class="tmpl-name">Weekly Newsletter</div><div class="tmpl-desc">Casual and engaging. Keeps your audience coming back every week.</div></div>
+            <div class="tmpl-card" onclick="useTemplate('social','witty','product launch announcement')"><div class="tmpl-icon">📱</div><div class="tmpl-name">Product Launch Post</div><div class="tmpl-desc">Witty social media copy to build buzz around your launch.</div></div>
+            <div class="tmpl-card" onclick="useTemplate('ad','persuasive','SaaS tool free trial')"><div class="tmpl-icon">⚡</div><div class="tmpl-name">SaaS Ad Copy</div><div class="tmpl-desc">Persuasive ad copy for driving sign-ups and free trial conversions.</div></div>
+            <div class="tmpl-card" onclick="useTemplate('blog','inspirational','entrepreneurship lessons')"><div class="tmpl-icon">🌟</div><div class="tmpl-name">Inspirational Story</div><div class="tmpl-desc">Motivational content that resonates with your audience emotionally.</div></div>
+            <div class="tmpl-card" onclick="useTemplate('email','professional','product feature update announcement')"><div class="tmpl-icon">🚀</div><div class="tmpl-name">Feature Announcement</div><div class="tmpl-desc">Professional email for announcing new features to your users.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS TAB -->
+      <div id="tab-settings" class="ws-section">
+        <div class="ws-tabs"><button class="ws-tab active"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M4.93 19.07l1.41-1.41M19.07 19.07l-1.41-1.41M20 12h2M2 12h2M12 20v2M12 2v2"/></svg> Settings</button></div>
+        <div class="ws-content">
+          <div style="font-family:var(--fd);font-size:1.4rem;font-weight:900;margin-bottom:1.25rem">Account Settings</div>
+          <div class="settings-card">
+            <div class="settings-title">⚙️ Preferences</div>
+            <div class="settings-row"><div><div class="settings-lbl">Default AI Model</div><div class="settings-val">Llama 3.3 70B</div></div><div class="sw" style="width:160px"><select style="background:var(--cream);font-size:.8rem"><option>Llama 3.3 70B</option><option>Llama 3.1 8B</option><option>Mixtral 8x7B</option><option>Gemma 2 9B</option></select></div></div>
+            <div class="settings-row"><div><div class="settings-lbl">Auto-save generations</div><div class="settings-val">Save to history automatically</div></div><div class="toggle"></div></div>
+            <div class="settings-row"><div><div class="settings-lbl">Streaming output</div><div class="settings-val">Show text word-by-word as it generates</div></div><div class="toggle"></div></div>
+          </div>
+          <div class="settings-card">
+            <div class="settings-title">👤 Account</div>
+            <div class="settings-row"><div><div class="settings-lbl" id="settings-name-lbl">Name</div></div></div>
+            <div class="settings-row"><div><div class="settings-lbl" id="settings-email-lbl">Email</div></div></div>
+            <div class="settings-row"><div><div class="settings-lbl">Plan</div><div class="settings-val">Free — 10 generations/month</div></div><button class="btn-coral" style="font-size:.76rem;padding:.36rem .85rem">Upgrade</button></div>
+            <div class="settings-row"><div><div class="settings-lbl">Sign out</div></div><button class="btn-ghost" style="font-size:.76rem;padding:.36rem .85rem" onclick="logout()">Log Out</button></div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <!-- IMAGES TAB -->
+      <div id="tab-images" class="ws-section">
+        <div class="ws-tabs">
+          <button class="ws-tab active">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            AI Image Generation
+          </button>
+        </div>
+        <div class="ws-content">
+          <div style="margin-bottom:1.5rem">
+            <div style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem">Pro Feature</div>
+            <div style="font-family:var(--fd);font-size:1.5rem;font-weight:900;margin-bottom:.3rem">AI Image Generation</div>
+            <div style="font-size:.88rem;color:var(--ink2);font-weight:300">Describe any image and watch AI bring it to life in seconds using Pollinations AI.</div>
+          </div>
+
+          <div class="gen-layout">
+            <div class="gen-form-col">
+              <div class="gen-card">
+                <div class="gen-card-title" style="color:var(--teal)">Image Settings</div>
+
+                <div class="fg">
+                  <label class="fl">Image Prompt</label>
+                  <textarea id="imgPrompt" rows="3" style="width:100%;padding:.64rem .95rem;border:1.5px solid var(--border2);border-radius:var(--rs);background:var(--cream);font-family:var(--f);font-size:.86rem;color:var(--ink);outline:none;resize:vertical;transition:border-color .18s,background .18s;line-height:1.5" placeholder="e.g. A futuristic city at sunset, cinematic, 4K, ultra realistic…" oninput="this.style.borderColor='var(--teal)'" onblur="this.style.borderColor='var(--border2)'"></textarea>
+                </div>
+
+                <div class="fg">
+                  <label class="fl">Style</label>
+                  <div class="imggen-style-pills" id="stylePills">
+                    <button class="style-pill active" onclick="selectStyle(this,'')">None</button>
+                    <button class="style-pill" onclick="selectStyle(this,'photorealistic')">Photorealistic</button>
+                    <button class="style-pill" onclick="selectStyle(this,'oil painting')">Oil Painting</button>
+                    <button class="style-pill" onclick="selectStyle(this,'anime')">Anime</button>
+                    <button class="style-pill" onclick="selectStyle(this,'watercolor')">Watercolor</button>
+                    <button class="style-pill" onclick="selectStyle(this,'3D render')">3D Render</button>
+                    <button class="style-pill" onclick="selectStyle(this,'pixel art')">Pixel Art</button>
+                    <button class="style-pill" onclick="selectStyle(this,'sketch')">Sketch</button>
+                  </div>
+                </div>
+
+                <div class="imggen-opts">
+                  <div class="fg" style="margin:0">
+                    <label class="fl">Size</label>
+                    <div class="sw"><select id="imgSize">
+                      <option value="1024x1024">Square (1024×1024)</option>
+                      <option value="1280x720">Landscape (1280×720)</option>
+                      <option value="720x1280">Portrait (720×1280)</option>
+                    </select></div>
+                  </div>
+                  <div class="fg" style="margin:0">
+                    <label class="fl">Model</label>
+                    <div class="sw"><select id="imgModel">
+                      <option value="flux">Flux — Best quality</option>
+                      <option value="flux-realism">Flux Realism</option>
+                      <option value="turbo">Turbo — Fastest</option>
+                    </select></div>
+                  </div>
+                </div>
+
+                <button class="imggen-btn" id="imgGenBtn" onclick="generateImage()">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                  Generate Image
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <div class="out-empty" id="imgEmpty">
+                <div class="out-empty-icon">🖼</div>
+                <h3>Your image will appear here</h3>
+                <p>Describe what you want to see and click Generate — AI will create it in seconds.</p>
+              </div>
+
+              <div class="imggen-result" id="imgResult">
+                <div id="imgDisplay"></div>
+                <div class="imggen-result-acts" id="imgActs"></div>
+              </div>
+
+              <div class="imggen-gallery" id="imgGallery" style="display:none">
+                <div class="imggen-gallery-title">Recent Images</div>
+                <div class="imggen-gallery-grid" id="imgGalleryGrid"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHAT TAB -->
+      <div id="tab-chat" class="ws-section" style="display:flex;flex-direction:column;height:100%;padding:0">
+        <div class="chat-wrap">
+          <div class="chat-topbar">
+            <div class="chat-model-pick">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+              <select id="chatModel">
+                <option value="llama-3.3-70b-versatile">Chatly Pro — Llama 3.3 70B</option>
+                <option value="llama-3.1-8b-instant">Chatly Fast — Llama 3.1 8B</option>
+                <option value="mixtral-8x7b-32768">Chatly Max — Mixtral 8x7B</option>
+                <option value="gemma2-9b-it">Chatly Mini — Gemma 2 9B</option>
+              </select>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="chat-topbar-actions">
+              <button class="chat-icon-btn" title="Export chat" onclick="chatExport()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </button>
+              <button class="chat-icon-btn" title="New chat" onclick="chatNewChat()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="chat-messages" id="chatMessages">
+            <div class="chat-welcome" id="chatWelcome">
+              <div class="chat-welcome-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              </div>
+              <h3>How can I help you today?</h3>
+              <p>I'm Chatly — your AI assistant. Ask me anything, or pick a suggestion below.</p>
+              <div class="chat-suggestions">
+                <div class="chat-sug" onclick="chatSuggest('Write a Python script to automate sending emails')"><div class="chat-sug-title">Write code</div><div class="chat-sug-sub">Python email automation</div></div>
+                <div class="chat-sug" onclick="chatSuggest('Explain the difference between machine learning and deep learning')"><div class="chat-sug-title">Explain a concept</div><div class="chat-sug-sub">ML vs deep learning</div></div>
+                <div class="chat-sug" onclick="chatSuggest('Give me 5 headline ideas for a SaaS landing page')"><div class="chat-sug-title">Brainstorm ideas</div><div class="chat-sug-sub">SaaS landing page headlines</div></div>
+                <div class="chat-sug" onclick="chatSuggest('Write a professional bio for a content marketing manager')"><div class="chat-sug-title">Write a bio</div><div class="chat-sug-sub">Content marketing manager</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="chat-input-area">
+            <div class="chat-input-wrap">
+              <textarea class="chat-input" id="chatInput" placeholder="Message Chatly…" rows="1"
+                onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chatSend();}"
+                oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,160)+'px'"></textarea>
+              <button class="chat-send" id="chatSendBtn" onclick="chatSend()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+              </button>
+            </div>
+            <div class="chat-footer-note">Chatly can make mistakes. Powered by Groq.</div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ══════════ LOGIN MODAL ══════════ -->
+<div class="modal-bg" id="modal-bg" onclick="closeOutside(event)">
+  <div class="modal">
+    <button class="modal-x" onclick="closeModal()">✕</button>
+    <div class="m-logo-wrap">
+      <div class="m-logo-box"><svg width="52" height="52" viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="9.5" stroke="white" stroke-width="1.5"/><circle cx="18" cy="10" r="1.7" fill="white"/><circle cx="24.5" cy="13.5" r="1.7" fill="white"/><circle cx="24.5" cy="22.5" r="1.7" fill="white"/><circle cx="18" cy="26" r="1.7" fill="white"/><circle cx="11.5" cy="22.5" r="1.7" fill="white"/><circle cx="11.5" cy="13.5" r="1.7" fill="white"/><circle cx="18" cy="18" r="2.2" fill="white"/><line x1="18" y1="10" x2="18" y2="18" stroke="white" stroke-width="1" stroke-opacity=".75"/><line x1="24.5" y1="13.5" x2="18" y2="18" stroke="white" stroke-width="1" stroke-opacity=".75"/><line x1="24.5" y1="22.5" x2="18" y2="18" stroke="white" stroke-width="1" stroke-opacity=".75"/><line x1="18" y1="26" x2="18" y2="18" stroke="white" stroke-width="1" stroke-opacity=".75"/><line x1="11.5" y1="22.5" x2="18" y2="18" stroke="white" stroke-width="1" stroke-opacity=".75"/><line x1="11.5" y1="13.5" x2="18" y2="18" stroke="white" stroke-width="1" stroke-opacity=".75"/><line x1="18" y1="10" x2="24.5" y2="13.5" stroke="white" stroke-width=".8" stroke-opacity=".32"/><line x1="24.5" y1="13.5" x2="24.5" y2="22.5" stroke="white" stroke-width=".8" stroke-opacity=".32"/><line x1="24.5" y1="22.5" x2="18" y2="26" stroke="white" stroke-width=".8" stroke-opacity=".32"/><line x1="18" y1="26" x2="11.5" y2="22.5" stroke="white" stroke-width=".8" stroke-opacity=".32"/><line x1="11.5" y1="22.5" x2="11.5" y2="13.5" stroke="white" stroke-width=".8" stroke-opacity=".32"/><line x1="11.5" y1="13.5" x2="18" y2="10" stroke="white" stroke-width=".8" stroke-opacity=".32"/></svg></div>
+    </div>
+    <div class="m-title" id="m-title">Welcome back</div>
+    <div class="m-sub" id="m-sub">Log in to your Chatly account</div>
+    <div class="m-tabs">
+      <button class="mtab on" id="tab-l" onclick="switchTab('login')">Log In</button>
+      <button class="mtab" id="tab-s" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+    <div class="ep-label">Continue with email provider</div>
+    <div class="ep-row">
+      <button class="ep" onclick="selEP(this,'gmail')"><svg width="13" height="13" viewBox="0 0 24 24"><path fill="#EA4335" d="M5.266 9.765C6.198 6.939 8.854 4.91 12 4.91c1.691 0 3.218.6 4.418 1.582l3.491-3.491C17.782 1.145 15.054 0 12 0 7.27 0 3.198 2.698 1.24 6.65l4.026 3.115z"/><path fill="#34A853" d="M16.04 18.013C14.951 18.716 13.566 19.09 12 19.09c-3.133 0-5.78-2.013-6.723-4.822l-4.04 3.067C3.193 21.294 7.265 24 12 24c2.933 0 5.735-1.043 7.834-3.001l-3.794-2.986z"/><path fill="#4A90E2" d="M19.834 21C22.029 18.952 23.455 15.904 23.455 12c0-.709-.091-1.473-.228-2.182H12v4.637h6.436c-.317 1.559-1.17 2.766-2.395 3.557L19.834 21z"/><path fill="#FBBC05" d="M5.277 14.268A7.12 7.12 0 0 1 4.909 12c0-.782.125-1.533.357-2.235L1.24 6.65A11.934 11.934 0 0 0 0 12c0 1.92.445 3.73 1.237 5.335l4.04-3.067z"/></svg> Gmail</button>
+      <button class="ep" onclick="selEP(this,'yahoo')"><svg width="13" height="13" viewBox="0 0 24 24" fill="#6001D2"><path d="M0 0l6.037 13.25L0 21.25h3.5l3.5-5.625L10.5 21.25H14L7.875 13.25 13.875 0H10.5L6.5 9.25 2.5 0H0zm13.5 6.75L16.5 14l3-7.25H24L18 21.25V29h-3v-7.75L9 6.75h4.5z"/></svg> Yahoo</button>
+      <button class="ep" onclick="selEP(this,'zoho')"><svg width="13" height="13" viewBox="0 0 24 24" fill="#E42527"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 4a8 8 0 1 1 0 16A8 8 0 0 1 12 4zm-1 4v4H7l5 6 5-6h-4V8h-2z"/></svg> Zoho</button>
+      <button class="ep" onclick="selEP(this,'tuta')"><svg width="13" height="13" viewBox="0 0 24 24" fill="#840010"><path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.236L20 8.5v7L12 19.764 4 15.5v-7L12 4.236zM8 10v4h2v-3h4v3h2v-4H8z"/></svg> Tuta</button>
+    </div>
+    <div class="m-div">or enter email directly</div>
+    <div class="mfg"><label class="mfl">Email Address</label><input class="minput" type="text" id="m-email" placeholder="you@gmail.com"/></div>
+    <div class="mfg"><label class="mfl">Password</label><input class="minput" type="password" id="m-pass" placeholder="Min 6 characters"/></div>
+    <div class="mfg" id="m-name-row" style="display:none"><label class="mfl">Full Name</label><input class="minput" type="text" id="m-name" placeholder="e.g. Jamie Smith"/></div>
+    <button class="m-submit" id="m-submit" onclick="handleAuth()">Log In to Chatly</button>
+    <p class="m-note">By continuing you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.</p>
+  </div>
+</div>
+
+
+<!-- ══ UPGRADE MODAL ══ -->
+<div class="upgrade-modal-bg" id="upgradeModalBg" onclick="if(event.target===this)closeUpgradeModal()">
+  <div class="upgrade-modal">
+    <div class="upgrade-icon" id="upgradeIcon">🚀</div>
+    <h3 id="upgradeTitle">Upgrade to Pro</h3>
+    <p id="upgradeMsg">Unlock unlimited generations and all features.</p>
+    <div class="upgrade-modal-btns">
+      <button class="upgrade-modal-cta" onclick="upgradeToPro()">⚡ Upgrade to Pro — $19/month</button>
+      <button class="upgrade-modal-skip" onclick="closeUpgradeModal()">Maybe later</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+// ── GROQ ─────────────────────────────────────────────────
+const GROQ_KEY = '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';
+// ── PLAN & LIMIT SYSTEM ──────────────────────────────────
+const FREE_LIMIT = 10;
+const FREE_TYPES = ['blog', 'email', 'social']; // Ad copy is Pro only
+let userPlan = 'free'; // 'free' or 'pro'
+let genCount = 0;
+
+function getPlanInfo(){ return { plan: userPlan, count: genCount, limit: userPlan==='free'?FREE_LIMIT:Infinity }; }
+
+function updateLimitBar(){
+  const bar = document.getElementById('limitBarFill');
+  const countEl = document.getElementById('limitCount');
+  const wrap = document.getElementById('limitBarWrap');
+  if(!bar || !wrap) return;
+  if(userPlan === 'pro'){
+    wrap.style.display = 'none';
+    return;
+  }
+  wrap.style.display = 'flex';
+  const pct = Math.min((genCount / FREE_LIMIT) * 100, 100);
+  bar.style.width = pct + '%';
+  bar.className = 'limit-bar-fill' + (pct >= 80 ? (pct >= 100 ? ' danger' : ' warn') : '');
+  countEl.textContent = genCount + ' / ' + FREE_LIMIT;
+  // lock Ad Copy option for free users
+  const adOpt = document.querySelector('#contentType option[value="ad"]');
+  if(adOpt) { adOpt.disabled = true; adOpt.textContent = 'Ad Copy (Pro only)'; }
+}
+
+function checkLimit(){
+  if(userPlan === 'pro') return true;
+  if(genCount >= FREE_LIMIT){
+    showUpgradeModal('limit');
+    return false;
+  }
+  const type = document.getElementById('contentType').value;
+  if(type === 'ad'){
+    showUpgradeModal('type');
+    return false;
+  }
+  return true;
+}
+
+function showUpgradeModal(reason){
+  const modal = document.getElementById('upgradeModalBg');
+  const icon = document.getElementById('upgradeIcon');
+  const title = document.getElementById('upgradeTitle');
+  const msg = document.getElementById('upgradeMsg');
+  if(reason === 'limit'){
+    icon.textContent = '🚀';
+    title.textContent = 'You\'ve used all 10 free generations!';
+    msg.textContent = 'Upgrade to Pro for unlimited generations, all 4 AI models, ad copy, image generation, and your full workspace.';
+  } else if(reason === 'type'){
+    icon.textContent = '🔒';
+    title.textContent = 'Ad Copy is a Pro feature';
+    msg.textContent = 'Upgrade to Pro to unlock Ad Copy, AI Image Generation, all 4 models, and unlimited generations.';
+  } else if(reason === 'image'){
+    icon.textContent = '🖼';
+    title.textContent = 'Image Generation is a Pro feature';
+    msg.textContent = 'Upgrade to Pro to generate unlimited AI images, plus unlock ad copy, all models, and more.';
+  }
+  modal.classList.add('open');
+}
+
+function closeUpgradeModal(){
+  document.getElementById('upgradeModalBg').classList.remove('open');
+}
+
+function upgradeToPro(){
+  closeUpgradeModal();
+  // In a real app this would go to payment. Here we simulate upgrade.
+  userPlan = 'pro';
+  genCount = 0;
+  updateLimitBar();
+  // Update settings panel
+  const planEl = document.querySelector('#tab-settings .settings-val');
+  if(planEl && planEl.textContent.includes('Free')) planEl.textContent = 'Pro — Unlimited generations';
+  showToast('🎉 Welcome to Pro! All features unlocked.');
+  // unlock ad copy
+  const adOpt = document.querySelector('#contentType option[value="ad"]');
+  if(adOpt){ adOpt.disabled = false; adOpt.textContent = 'Ad Copy'; }
+}
+
+const typeLabels = {blog:'Blog Post',email:'Email',social:'Social Post',ad:'Ad Copy'};
+const modelNames = {'llama-3.3-70b-versatile':'Llama 3.3 70B','llama-3.1-8b-instant':'Llama 3.1 8B','mixtral-8x7b-32768':'Mixtral 8x7B','gemma2-9b-it':'Gemma 2 9B'};
+let currentContent = '', isGenerating = false;
+const prompts = {
+  blog:  (t,p) => `Write a compelling blog post about "${p}" in a ${t} tone. Include a catchy title, engaging introduction, 3-4 main points with subheadings, and a strong conclusion with a call to action. Around 400-500 words.`,
+  email: (t,p) => `Write a marketing email about "${p}" in a ${t} tone. Start with "Subject:" on the first line. Include greeting, engaging content, and a clear call-to-action. Around 200 words.`,
+  social:(t,p) => `Write a social media post about "${p}" in a ${t} tone for LinkedIn. Strong opening hook, 3-4 short punchy lines, and 3-5 relevant hashtags at the end.`,
+  ad:    (t,p) => `Write digital ad copy about "${p}" in a ${t} tone. Include: Headline (max 10 words), Subheadline, 3 benefit bullet points, and CTA. Label each section clearly.`
+};
+
+async function handleGenerate() {
+  if (isGenerating) return;
+  if (!checkLimit()) return;
+  const model = document.getElementById('model').value;
+  const type  = document.getElementById('contentType').value;
+  const tone  = document.getElementById('tone').value;
+  const topic = document.getElementById('topic').value.trim();
+  if (!type || !tone || !topic) { showToast('Please fill in all fields.', true); return; }
+  isGenerating = true;
+  const btn = document.getElementById('generateBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Generating…';
+  document.getElementById('outEmpty').style.display = 'none';
+  const card = document.getElementById('resultCard');
+  const contentEl = document.getElementById('resultContent');
+  document.getElementById('resultBadge').textContent = typeLabels[type] || type;
+  document.getElementById('modelUsed').textContent   = modelNames[model] || model;
+  contentEl.innerHTML = '<span class="cursor"></span>';
+  card.classList.add('visible');
+  document.getElementById('charCount').textContent = '';
+  document.getElementById('speedTag').textContent  = '';
+  currentContent = '';
+  const t0 = Date.now();
+  try {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+GROQ_KEY},
+      body:JSON.stringify({model, max_tokens:1024, stream:true, messages:[
+        {role:'system', content:'You are Chatly, an expert content writer. Write high-quality, engaging content exactly as requested. Output the content directly with no meta-commentary.'},
+        {role:'user',   content:prompts[type](tone, topic)}
+      ]})
+    });
+    if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.error?.message||`Error ${res.status}`); }
+    const reader = res.body.getReader(), decoder = new TextDecoder();
+    let buf = '';
+    while (true) {
+      const {done, value} = await reader.read();
+      if (done) break;
+      buf += decoder.decode(value,{stream:true});
+      const lines = buf.split('\n'); buf = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const data = line.slice(6).trim();
+        if (data==='[DONE]') continue;
+        try { const delta = JSON.parse(data).choices?.[0]?.delta?.content; if (delta){currentContent+=delta;contentEl.textContent=currentContent;contentEl.innerHTML+='<span class="cursor"></span>';} } catch {}
+      }
+    }
+    const elapsed = ((Date.now()-t0)/1000).toFixed(1);
+    const words   = currentContent.trim().split(/\s+/).length;
+    contentEl.textContent = currentContent;
+    document.getElementById('charCount').textContent = `${words} words · ${currentContent.length} chars`;
+    document.getElementById('speedTag').textContent  = `Generated in ${elapsed}s`;
+    // Add to history
+    genCount++; updateLimitBar();
+    addToHistory(typeLabels[type], topic, modelNames[model]);
+    showToast('Content generated!');
+  } catch(err) {
+    contentEl.textContent=''; card.classList.remove('visible');
+    document.getElementById('outEmpty').style.display='block';
+    let msg = err.message||'Something went wrong.';
+    if(msg.includes('401')) msg='API key error.';
+    if(msg.includes('429')) msg='Rate limit reached. Try again in a moment.';
+    showToast(msg,true);
+  } finally {
+    isGenerating=false; btn.disabled=false;
+    btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Generate Content';
+  }
+}
+function handleCopy(){ copyText(currentContent); }
+function copyText(t){ navigator.clipboard.writeText(t).then(()=>showToast('Copied!')).catch(()=>showToast('Copy failed.',true)); }
+function handleDownload(){
+  const type=document.getElementById('contentType').value||'content';
+  const blob=new Blob([currentContent],{type:'text/plain'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download=`${type}-${Date.now()}.txt`; a.click();
+  URL.revokeObjectURL(url); showToast('Downloaded!');
+}
+
+// ── HISTORY ──────────────────────────────────────────────
+const iconMap = {blog:'📝',email:'📧','Social Post':'💬','Ad Copy':'⚡'};
+const badgeMap = {blog:'hb-blog',email:'hb-email','Social Post':'hb-social','Ad Copy':'hb-ad'};
+function addToHistory(type, topic, model){
+  const list = document.getElementById('hist-list');
+  const icon = iconMap[type]||'📄';
+  const badge = badgeMap[type]||'hb-blog';
+  const item = document.createElement('div');
+  item.className='hist-item';
+  item.innerHTML=`<div class="hist-icon">${icon}</div><div class="hist-body"><div class="hist-title">${topic.substring(0,55)}</div><div class="hist-meta">${type} · ${model} · Just now</div></div><span class="hist-badge ${badge}">${type.toLowerCase().split(' ')[0]}</span>`;
+  list.insertBefore(item, list.firstChild);
+}
+
+// ── TEMPLATES ────────────────────────────────────────────
+function useTemplate(type, tone, topic){
+  switchWsTab('generate', document.getElementById('sb-generate'));
+  document.getElementById('contentType').value = type;
+  document.getElementById('tone').value = tone;
+  document.getElementById('topic').value = topic;
+  showToast('Template loaded! Click Generate.');
+}
+
+// ── WORKSPACE NAV ─────────────────────────────────────────
+function switchWsTab(name, el){
+  document.querySelectorAll('.ws-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.ws-sb-item').forEach(i=>i.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(el) el.classList.add('active');
+}
+function goLanding(){
+  document.getElementById('workspace').style.display='none';
+  document.getElementById('landing').classList.add('active');
+  document.body.style.overflow='';
+}
+function openWorkspace(user){
+  document.getElementById('landing').classList.remove('active');
+  document.getElementById('workspace').style.display='flex';
+  document.body.style.overflow='hidden';
+  const initials=user.initials, name=user.name.split(' ')[0], email=user.email;
+  document.getElementById('ws-user-row').innerHTML=`<div class="user-pill"><div class="u-av">${initials}</div><span>${name}</span></div><button class="btn-lo" onclick="logout()">Log out</button>`;
+  document.getElementById('ws-sidebar-user').innerHTML=`<div class="ws-u-av">${initials}</div><div><div class="ws-u-name">${user.name}</div><div class="ws-u-plan">Free Plan</div></div>`;
+  document.getElementById('settings-name-lbl').textContent=user.name;
+  document.getElementById('settings-email-lbl').textContent=email;
+  genCount=0; userPlan='free'; updateLimitBar();
+}
+
+// ── AUTH ─────────────────────────────────────────────────
+let modalMode='login';
+function openModal(m){ modalMode=m; switchTab(m); document.getElementById('modal-bg').classList.add('open'); }
+function closeModal(){ document.getElementById('modal-bg').classList.remove('open'); }
+function closeOutside(e){ if(e.target===document.getElementById('modal-bg')) closeModal(); }
+function switchTab(m){
+  modalMode=m;
+  document.getElementById('tab-l').classList.toggle('on',m==='login');
+  document.getElementById('tab-s').classList.toggle('on',m==='signup');
+  document.getElementById('m-title').textContent  = m==='login'?'Welcome back':'Create your account';
+  document.getElementById('m-sub').textContent    = m==='login'?'Log in to your Chatly account':'Start generating content for free';
+  document.getElementById('m-submit').textContent = m==='login'?'Log In to Chatly':'Create Account — Free';
+  document.getElementById('m-name-row').style.display=m==='signup'?'block':'none';
+}
+function selEP(btn,p){
+  document.querySelectorAll('.ep').forEach(b=>b.classList.remove('sel')); btn.classList.add('sel');
+  const hints={gmail:'@gmail.com',yahoo:'@yahoo.com',zoho:'@zohomail.com',tuta:'@tuta.com'};
+  const el=document.getElementById('m-email'); if(!el.value.includes('@')) el.placeholder='you'+hints[p];
+}
+function handleAuth(){
+  const email=document.getElementById('m-email').value.trim();
+  const pass =document.getElementById('m-pass').value;
+  const name =document.getElementById('m-name').value.trim();
+  if(!email||!email.includes('@')){ showToast('Please enter a valid email.',true); return; }
+  if(!pass||pass.length<6){ showToast('Password must be 6+ characters.',true); return; }
+  if(modalMode==='signup'&&!name){ showToast('Please enter your name.',true); return; }
+  const displayName = name||email.split('@')[0];
+  const initials    = displayName.split(' ').map(w=>w[0]).join('').toUpperCase().substring(0,2);
+  closeModal();
+  showToast(modalMode==='signup'?'🎉 Account created! Opening your workspace…':`Welcome back, ${displayName.split(' ')[0]}! Opening workspace…`);
+  setTimeout(()=>openWorkspace({name:displayName,initials,email}), 700);
+}
+function logout(){
+  document.getElementById('workspace').style.display='none';
+  document.getElementById('landing').classList.add('active');
+  document.body.style.overflow='';
+  showToast('Logged out successfully.');
+}
+
+// ── UTILS ─────────────────────────────────────────────────
+function go(id){ document.getElementById(id)?.scrollIntoView({behavior:'smooth'}); }
+function showToast(msg,isErr){
+  const wrap=document.getElementById('toastWrap');
+  const t=document.createElement('div');
+  t.className='toast'+(isErr?' err':''); t.textContent=msg; wrap.appendChild(t);
+  setTimeout(()=>t.classList.add('show'),10);
+  setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=>t.remove(),300); },3000);
+}
+
+
+// ── IMAGE GENERATION ─────────────────────────────────────
+let selectedStyle = '';
+let imgHistory = [];
+
+function selectStyle(btn, style){
+  document.querySelectorAll('.style-pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  selectedStyle = style;
+}
+
+async function generateImage(){
+  if(userPlan !== 'pro'){ showUpgradeModal('image'); return; }
+  const prompt = document.getElementById('imgPrompt').value.trim();
+  if(!prompt){ showToast('Please enter an image prompt.', true); return; }
+
+  const model = document.getElementById('imgModel').value;
+  const sizeVal = document.getElementById('imgSize').value;
+  const [w, h] = sizeVal.split('x').map(Number);
+  const fullPrompt = selectedStyle ? prompt + ', ' + selectedStyle : prompt;
+
+  const btn = document.getElementById('imgGenBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Generating…';
+
+  document.getElementById('imgEmpty').style.display = 'none';
+  const result = document.getElementById('imgResult');
+  const display = document.getElementById('imgDisplay');
+  result.classList.add('visible');
+
+  display.innerHTML = `<div class="imggen-loading">
+    <div class="imggen-loading-dot"><span></span><span></span><span></span></div>
+    <p>Creating your image… this takes 5–15 seconds</p>
+  </div>`;
+  document.getElementById('imgActs').innerHTML = '';
+
+  const seed = Math.floor(Math.random() * 999999);
+  const encodedPrompt = encodeURIComponent(fullPrompt);
+  const imgUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${w}&height=${h}&model=${model}&seed=${seed}&nologo=true`;
+
+  try {
+    const img = new Image();
+    img.onload = function(){
+      display.innerHTML = `<img src="${imgUrl}" alt="${prompt}" style="width:100%;border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--sh);display:block"/>`;
+
+      document.getElementById('imgActs').innerHTML = `
+        <button class="r-btn" onclick="downloadImg('${imgUrl}','chatly-image-${seed}')">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download
+        </button>
+        <button class="r-btn" onclick="generateImage()">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+          Regenerate
+        </button>
+        <button class="r-btn" onclick="navigator.clipboard.writeText('${imgUrl}').then(()=>showToast('Image URL copied!'))">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy URL
+        </button>`;
+
+      imgHistory.unshift({url: imgUrl, prompt: fullPrompt});
+      updateImgGallery();
+      showToast('Image generated!');
+
+      btn.disabled = false;
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Generate Image';
+    };
+    img.onerror = function(){
+      display.innerHTML = '<div class="out-empty"><div class="out-empty-icon">⚠️</div><h3>Generation failed</h3><p>Try a different prompt or model and try again.</p></div>';
+      btn.disabled = false;
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Generate Image';
+      showToast('Generation failed — try again.', true);
+    };
+    img.src = imgUrl;
+  } catch(err) {
+    display.innerHTML = '<div class="out-empty"><h3>Something went wrong</h3><p>' + err.message + '</p></div>';
+    btn.disabled = false;
+    btn.innerHTML = 'Generate Image';
+    showToast(err.message, true);
+  }
+}
+
+function updateImgGallery(){
+  if(!imgHistory.length) return;
+  const gallery = document.getElementById('imgGallery');
+  const grid = document.getElementById('imgGalleryGrid');
+  gallery.style.display = 'block';
+  grid.innerHTML = imgHistory.slice(0,6).map(item =>
+    `<div class="imggen-gallery-item" title="${item.prompt}" onclick="viewImg('${item.url}')">
+      <img src="${item.url}" alt="${item.prompt}" loading="lazy"/>
+    </div>`
+  ).join('');
+}
+
+function viewImg(url){
+  document.getElementById('imgDisplay').innerHTML = `<img src="${url}" style="width:100%;border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--sh);display:block"/>`;
+  document.getElementById('imgResult').classList.add('visible');
+  document.getElementById('imgEmpty').style.display = 'none';
+}
+
+function downloadImg(url, filename){
+  const a = document.createElement('a');
+  a.href = url; a.download = filename + '.jpg';
+  a.target = '_blank'; a.click();
+  showToast('Downloading image…');
+}
+
+// ── CHATLY CHAT TAB ──────────────────────────────────────
+const CHAT_SYS = 'You are Chatly, a helpful, friendly, and knowledgeable AI assistant. Give clear, accurate, well-structured responses. When writing code, always use fenced code blocks with the language specified. Be concise but thorough. Never mention Groq, Meta, or any underlying model — you are Chatly.';
+let chatMessages = [], chatGenerating = false;
+
+function chatRenderMd(text){
+  let h = text;
+  h = h.replace(/```(\w*)\n?([\s\S]*?)```/g, (_,lang,code)=>{
+    const l=lang||'plaintext'; let hi=code.trim();
+    return `<pre class="chat-pre"><div class="chat-code-hdr"><span>${l}</span><button class="chat-copy-code" onclick="chatCopyCode(this)">Copy</button></div><code>${hi.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</code></pre>`;
+  });
+  h = h.replace(/`([^`]+)`/g,'<span class="chat-inline-code">$1</span>');
+  h = h.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+  h = h.replace(/\*(.+?)\*/g,'<em>$1</em>');
+  h = h.replace(/^### (.+)$/gm,'<strong>$1</strong>');
+  h = h.replace(/^## (.+)$/gm,'<strong>$1</strong>');
+  h = h.replace(/^[-*] (.+)$/gm,'• $1');
+  h = h.replace(/\n/g,'<br>');
+  return h;
+}
+
+function chatCopyCode(btn){ const c=btn.closest('pre').querySelector('code').textContent; navigator.clipboard.writeText(c).then(()=>{btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy',2000);}); }
+
+function chatEsc(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function chatScrollB(){ const m=document.getElementById('chatMessages'); m.scrollTop=m.scrollHeight; }
+
+function chatSuggest(text){ document.getElementById('chatInput').value=text; chatSend(); }
+
+function chatNewChat(){
+  chatMessages=[];
+  document.getElementById('chatMessages').innerHTML=`<div class="chat-welcome" id="chatWelcome">
+    <div class="chat-welcome-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+    <h3>How can I help you today?</h3>
+    <p>I'm Chatly — your AI assistant. Ask me anything.</p>
+    <div class="chat-suggestions">
+      <div class="chat-sug" onclick="chatSuggest('Write a Python script to automate sending emails')"><div class="chat-sug-title">Write code</div><div class="chat-sug-sub">Python email automation</div></div>
+      <div class="chat-sug" onclick="chatSuggest('Explain the difference between machine learning and deep learning')"><div class="chat-sug-title">Explain a concept</div><div class="chat-sug-sub">ML vs deep learning</div></div>
+      <div class="chat-sug" onclick="chatSuggest('Give me 5 headline ideas for a SaaS landing page')"><div class="chat-sug-title">Brainstorm ideas</div><div class="chat-sug-sub">SaaS landing page headlines</div></div>
+      <div class="chat-sug" onclick="chatSuggest('Write a professional bio for a content marketing manager')"><div class="chat-sug-title">Write a bio</div><div class="chat-sug-sub">Content marketing manager</div></div>
+    </div>
+  </div>`;
+  document.getElementById('chatInput').value='';
+  showToast('New chat started!');
+}
+
+function chatExport(){
+  if(!chatMessages.length){showToast('No messages to export yet');return;}
+  let txt='Chatly Chat Export\n'+'='.repeat(40)+'\n\n';
+  chatMessages.forEach(m=>{txt+=(m.role==='user'?'You':'Chatly')+':\n'+m.content+'\n\n'+'-'.repeat(40)+'\n\n';});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([txt],{type:'text/plain'}));
+  a.download='chatly-chat-'+Date.now()+'.txt'; a.click();
+  showToast('Chat exported!');
+}
+
+function chatAppendUser(text){
+  document.getElementById('chatWelcome')?.remove();
+  const msgs=document.getElementById('chatMessages');
+  const d=document.createElement('div'); d.className='chat-msg user';
+  d.innerHTML=`<div class="chat-msg-av user">U</div><div class="chat-msg-body"><div class="chat-msg-name">You</div><div class="chat-msg-text user-bubble">${chatEsc(text)}</div></div>`;
+  msgs.appendChild(d); chatScrollB();
+}
+
+function chatAppendAI(){
+  const msgs=document.getElementById('chatMessages');
+  const d=document.createElement('div'); d.className='chat-msg'; d.id='chat-stream';
+  d.innerHTML=`<div class="chat-msg-av ai"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+  <div class="chat-msg-body"><div class="chat-msg-name">Chatly</div><div class="chat-msg-text" id="chat-sc"><span class="chat-cursor"></span></div>
+  <div class="chat-msg-acts">
+    <button class="chat-msg-act" onclick="navigator.clipboard.writeText(this.closest('.chat-msg').querySelector('.chat-msg-text').innerText).then(()=>showToast('Copied!'))"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button>
+  </div></div>`;
+  msgs.appendChild(d); chatScrollB();
+  return document.getElementById('chat-sc');
+}
+
+async function chatSend(){
+  if(chatGenerating) return;
+  const inp=document.getElementById('chatInput');
+  const text=inp.value.trim(); if(!text) return;
+  inp.value=''; inp.style.height='auto';
+  chatMessages.push({role:'user',content:text});
+  chatAppendUser(text);
+  chatGenerating=true;
+  document.getElementById('chatSendBtn').disabled=true;
+  const model=document.getElementById('chatModel').value;
+  const cel=chatAppendAI();
+  let full='';
+  try{
+    const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+GROQ_KEY},
+      body:JSON.stringify({model,max_tokens:2048,stream:true,messages:[{role:'system',content:CHAT_SYS},...chatMessages]})
+    });
+    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error?.message||`Error ${res.status}`);}
+    const reader=res.body.getReader(),decoder=new TextDecoder(); let buf='';
+    while(true){
+      const{done,value}=await reader.read(); if(done) break;
+      buf+=decoder.decode(value,{stream:true});
+      const lines=buf.split('\n'); buf=lines.pop();
+      for(const line of lines){
+        if(!line.startsWith('data: ')) continue;
+        const data=line.slice(6).trim(); if(data==='[DONE]') continue;
+        try{const j=JSON.parse(data),d=j.choices?.[0]?.delta?.content;if(d){full+=d;cel.innerHTML=chatRenderMd(full)+'<span class="chat-cursor"></span>';chatScrollB();}}catch(e){}
+      }
+    }
+    cel.innerHTML=chatRenderMd(full);
+    document.getElementById('chat-stream').id='';
+    chatMessages.push({role:'assistant',content:full});
+  }catch(err){
+    cel.innerHTML='<span style="color:#e24b4a">'+chatEsc(err.message)+'</span>';
+    showToast(err.message||'Something went wrong',true);
+  }finally{
+    chatGenerating=false;
+    document.getElementById('chatSendBtn').disabled=false;
+  }
+}
+
+document.getElementById('topic').addEventListener('keydown',e=>{ if(e.key==='Enter') handleGenerate(); });
+</script>
+</body>
+</html>
